@@ -11,7 +11,7 @@ The prerequisites can be installed on a Debian based linux machine, like so:
 
 Once those prerequisites have been installed, git clone this repo, cd into it, and activate the virtual environment:
 
-`cd /path/to/s4s && source udnenv/bin/activate`
+`cd /path/to/s4s && source bin/activate`
 
 Then install requests, pandas, matplotlib, and jupyter by running this command:
 
