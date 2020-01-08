@@ -12,8 +12,8 @@ def get_zipped_csv_files(url=ZIP_URL, csv_files=[], extract_path=None):
         zipped_csvs = zipfile.ZipFile(io.BytesIO(response.content))
 
         # If no csv_files were specified (empty csv_files),
-        # then extract all files in th zop file.  Otherwise,
-        # extract each file listed in the list, csv_files.
+        # then extract all files in the zip file.  Otherwise,
+        # extract each file listed in csv_files.
         if not csv_files: 
             zipped_csvs.extractall(path=extract_path)
         else:
