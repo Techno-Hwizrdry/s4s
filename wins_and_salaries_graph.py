@@ -143,7 +143,7 @@ def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=201
             ax.scatter(salaries, wins, c=color, edgecolors='none', s=30, label=group)
 
 
-        plt.legend(loc=2)
+        plt.legend(loc='best')
         plt.ylabel('Wins between %d and %d' % (start_year, end_year))
         plt.xlabel('Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year))
 
