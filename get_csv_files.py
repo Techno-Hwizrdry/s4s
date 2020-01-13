@@ -6,6 +6,13 @@ import zipfile
 
 ZIP_URL = "http://seanlahman.com/files/database/lahman-csv_2014-02-14.zip"
 
+# This function will fetch a zip file, containing .csv files, from a given url.
+# If no list of .csv files were passed into the fuction, then all the files in the
+# zip file will be extracted.  Errors will be printed to standard output if:
+# - The user specified files that do not exist in the zip file.
+# - The user provided an invalid url.
+# - The user was trying to unzip a file that is not a .zip file.
+# - An HTTP error was returned from the HTTP request.
 def get_zipped_csv_files(url=ZIP_URL, csv_files=[], extract_path=None):
     try:
         response    = requests.get(url)
