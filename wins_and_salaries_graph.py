@@ -94,41 +94,31 @@ def graph_xy_line(salaries_and_wins, teamID, column, start_year=1871, end_year=2
         fig.tight_layout()
         plt.show()
 
-#  This function will graph boxplots of the total salaries or wins of all the teams
-#  listed in teamIDs, over a given range of years. 
-def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year=2013):
-    if column.lower() not in Y_AXES:
-        print("ERROR in wins_and_salaries_graph.graph_boxplot(): %s is not a column in the salaries_and_wins data frame" % (column))
-    else:
-        data_to_plot = []
-        title  = ''
+#  This function will graph two boxplot charts of the total salaries and wins of all the teams
+#  listed in teamIDs, over a given range of years.  Both boxplot charts will be rendered side by side.
+def graph_boxplots(salaries_and_wins, teamIDs, start_year=1871, end_year=2013):
+    win_data = []
+    salary_data = []
 
-        if column.lower() == 'salaries':
-            title  = 'Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year)
-        else:
-            title  = 'Wins between %d and %d' % (start_year, end_year)
+    #  Separate the wins from the total salaries, of each team in teamIDs, put them in their appropriate list.
+    for teamID in teamIDs:
+        team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
 
-        #  Get the total salaries (or wins) for each team in teamIDs ready for the box plots.
-        for teamID in teamIDs:
-            team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
+        win_data.append(team_data_by_years['W'].tolist())
+        salary_data.append(get_formatted_salaries(team_data_by_years))
 
-            if column.lower() == 'wins':
-                data_to_plot.append(team_data_by_years['W'].tolist())
-            else:
-                data_to_plot.append(get_formatted_salaries(team_data_by_years))
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
 
+    #  The boxplot chart for the wins of each team.
+    axes[0].boxplot(win_data, vert=False, labels=teamIDs, patch_artist=True)
+    axes[0].set_title('Wins between %d and %d' % (start_year, end_year))
 
-        fig, ax1 = plt.subplots()
-        box = ax1.boxplot(data_to_plot, vert=False, labels=teamIDs, patch_artist=True)
-        ax1.set_title(title)
+    #  The boxplot chart for the total salaries of each team.
+    axes[1].boxplot(salary_data, vert=False, labels=teamIDs, patch_artist=True)
+    axes[1].set_title('Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year))
 
-        #  Cycle through the list of colors (or through the list of teamIDs) to make the boxplots more colorful.
-        colors = ['magenta', 'yellow', 'cyan', 'green']
-        colored_boxes = zip(box['boxes'], cycle(colors)) if len(box['boxes']) > len(colors) else zip(cycle(box['boxes']), colors)
-
-        fig.tight_layout()
-
-        plt.show()
+    fig.tight_layout()
+    plt.show()
 
 #  This function will plot an xy scatter chart of the wins and total salaries of up to 3 teams,
 #  over a given year range.  If more than 3 team ids where provided, the xy scatter chart will not be drawn.
@@ -147,11 +137,14 @@ def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=201
         colors = ['magenta', 'blue', 'green']
 
         for data, color, group in zip(data, colors, teamIDs):
-            wins, salaries, = data
-            ax.scatter(wins, salaries, c=color, edgecolors='none', s=30, label=group)
+            #wins, salaries, = data
+            #ax.scatter(wins, salaries, c=color, edgecolors='none', s=30, label=group)
+            salaries, wins = data
+            ax.scatter(salaries, wins, c=color, edgecolors='none', s=30, label=group)
+
 
         plt.legend(loc=2)
-        plt.xlabel('Wins between %d and %d' % (start_year, end_year))
-        plt.ylabel('Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year))
+        plt.ylabel('Wins between %d and %d' % (start_year, end_year))
+        plt.xlabel('Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year))
 
         plt.show()
