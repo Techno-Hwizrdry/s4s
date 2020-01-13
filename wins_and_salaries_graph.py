@@ -130,11 +130,28 @@ def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year
 
         plt.show()
 
-def xy_scatter_wins_totalsalaries(salaries_and_wins, teamIDs, start_year=1871, end_year=2013):
-    wins_to_plot = []
-    salaries_plot = []
+#  This function will plot an xy scatter chart of the wins and total salaries of up to 3 teams,
+#  over a given year range.  If more than 3 team ids where provided, the xy scatter chart will not be drawn.
+def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=2013):
+    if len(teamIDs > 3):
+        print("ERROR in wins_and_salaries_graph.xy_scatter_3_teams(): there are more than 3 team ids in teamIDs.")
+    else:
+        data = []
 
-    for teamID in teamIDs:
-        team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
-        wins_to_plot.append(team_data_by_years['W'].tolist())
-        salaries_plot.append(get_formatted_salaries(team_data_by_years))
+        for teamID in teamIDs:
+            team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
+            data.append((team_data_by_years['W'].tolist(), get_formatted_salaries(team_data_by_years)))
+
+        fig, ax = plt.subplots()
+
+        colors = ['magenta', 'cyan', 'green']
+
+        for data, color, group in zip(data, colors, teamIDs):
+            wins, salaries, = data
+            ax.scatter(wins, salaries, c=color, edgecolors='none', s=30, label=group)
+
+        plt.legend(loc=2)
+        plt.xlabel('Wins between %d and %d' % (start_year, end_year))
+        plt.ylabel('Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year))
+
+        plt.show()
