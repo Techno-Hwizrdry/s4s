@@ -130,7 +130,7 @@ def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=201
 
         for teamID in teamIDs:
             team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
-            data.append((team_data_by_years['W'].tolist(), get_formatted_salaries(team_data_by_years)))
+            data.append((get_formatted_salaries(team_data_by_years), team_data_by_years['W'].tolist()))
 
         fig, ax = plt.subplots()
 
