@@ -133,7 +133,7 @@ def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year
 #  This function will plot an xy scatter chart of the wins and total salaries of up to 3 teams,
 #  over a given year range.  If more than 3 team ids where provided, the xy scatter chart will not be drawn.
 def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=2013):
-    if len(teamIDs > 3):
+    if len(teamIDs) > 3:
         print("ERROR in wins_and_salaries_graph.xy_scatter_3_teams(): there are more than 3 team ids in teamIDs.")
     else:
         data = []
@@ -144,7 +144,7 @@ def xy_scatter_3_teams(salaries_and_wins, teamIDs, start_year=1871, end_year=201
 
         fig, ax = plt.subplots()
 
-        colors = ['magenta', 'cyan', 'green']
+        colors = ['magenta', 'blue', 'green']
 
         for data, color, group in zip(data, colors, teamIDs):
             wins, salaries, = data
