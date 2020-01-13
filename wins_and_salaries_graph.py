@@ -3,8 +3,12 @@ from   itertools import cycle
 import matplotlib.pyplot as plt
 import numpy as np
 
-SALARY_FACTOR = 1000000
 Y_AXES = ['salaries', 'wins']
+
+#  This function will return a list of salaries formatted by a factor of ten.
+#  1000000 is the default factor that will be used if no salary_factor is passed in.
+def get_formatted_salaries(team_data_by_years, salary_factor=1000000):
+    return [x/salary_factor for x in team_data_by_years['salary'].tolist()]  # Format the Salaries axis in millions.
 
 #  This function will return a filtered data frame of total salaries and total wins,
 #  based on a team (teamID) and a range of years.
@@ -37,7 +41,7 @@ def graph_dual_y(salaries_and_wins, teamID, start_year=1871, end_year=2013):
     #  t is our x-axis, labeling the year range.
     t = np.arange(start_year, end_year + 1)
     y_wins = team_data_by_years['W'].tolist()
-    y_salaries = [x/SALARY_FACTOR for x in team_data_by_years['salary'].tolist()]  # Format the Salaries axis in millions.
+    y_salaries = get_formatted_salaries(team_data_by_years)
 
     fig, ax1 = plt.subplots()
 
@@ -74,7 +78,7 @@ def graph_xy_line(salaries_and_wins, teamID, column, start_year=1871, end_year=2
         if column.lower() == 'salaries':
             color   = 'tab:blue'
             y_label = 'Total Salaries (in millions of USD)'
-            y_plot  = [x/SALARY_FACTOR for x in team_data_by_years['salary'].tolist()]  # Format the Salaries axis in millions.
+            y_plot  = get_formatted_salaries(team_data_by_years)
         else:
             color   = 'tab:red'
             y_label = 'Wins' 
@@ -111,7 +115,7 @@ def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year
             if column.lower() == 'wins':
                 data_to_plot.append(team_data_by_years['W'].tolist())
             else:
-                data_to_plot.append([x/SALARY_FACTOR for x in team_data_by_years['salary'].tolist()])  # Format the Salaries axis in millions.
+                data_to_plot.append(get_formatted_salaries(team_data_by_years))
 
 
         fig, ax1 = plt.subplots()
@@ -125,3 +129,12 @@ def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year
         fig.tight_layout()
 
         plt.show()
+
+def xy_scatter_wins_totalsalaries(salaries_and_wins, teamIDs, start_year=1871, end_year=2013):
+    wins_to_plot = []
+    salaries_plot = []
+
+    for teamID in teamIDs:
+        team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
+        wins_to_plot.append(team_data_by_years['W'].tolist())
+        salaries_plot.append(get_formatted_salaries(team_data_by_years))
