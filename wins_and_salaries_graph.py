@@ -1,5 +1,5 @@
 # Author:  Alexan Mardigian
-
+from   itertools import cycle
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -60,9 +60,9 @@ def graph_dual_y(salaries_and_wins, teamID, start_year=1871, end_year=2013):
 #  This method will plot a line graph of total salaries (or total wins) over a give range of years
 #  for a given team.  The string parameter, y_axis, can be set to either 'salaries' or 'wins'.
 #  if y_axis is not 'salaries' or 'wins', then an error will printed to standard out to the user.
-def graph_xy_line(salaries_and_wins, teamID, y_axis, start_year=1871, end_year=2013):
-    if y_axis.lower() not in Y_AXES:
-        print("ERROR:  " + y_axis + " is not a column in the salaries_and_wins data frame")
+def graph_xy_line(salaries_and_wins, teamID, column, start_year=1871, end_year=2013):
+    if column.lower() not in Y_AXES:
+        print("ERROR wins_and_salaries_graph.graph_xy_line(): %s is not a column in the salaries_and_wins data frame" % (column))
     else:
         team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
 
@@ -71,7 +71,7 @@ def graph_xy_line(salaries_and_wins, teamID, y_axis, start_year=1871, end_year=2
         color   = ''
         y_label = ''
 
-        if y_axis.lower() == 'salaries':
+        if column.lower() == 'salaries':
             color   = 'tab:blue'
             y_label = 'Total Salaries (in millions of USD)'
             y_plot  = [x/SALARY_FACTOR for x in team_data_by_years['salary'].tolist()]  # Format the Salaries axis in millions.
@@ -88,4 +88,43 @@ def graph_xy_line(salaries_and_wins, teamID, y_axis, start_year=1871, end_year=2
         ax1.tick_params(axis='y', labelcolor=color)
 
         fig.tight_layout()
+        plt.show()
+
+#  This function will graph boxplots of the total salaries or wins of all the teams
+#  listed in teamIDs, over a given range of years. 
+def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year=2013):
+    if column.lower() not in Y_AXES:
+        print("ERROR in wins_and_salaries_graph.graph_boxplot(): %s is not a column in the salaries_and_wins data frame" % (column))
+    else:
+        data_to_plot = []
+        title  = ''
+        column = '' 
+
+        if column.lower() == 'salaries':
+            column = 'salary'
+            title  = 'Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year)
+        else:
+            column = 'W'
+            title  = 'Wins between %d and %d' % (start_year, end_year)
+
+        #  Get the total salaries (or wins) for each team in teamIDs ready for the box plots.
+        for teamID in teamIDs:
+            team_data_by_years = filter_team_data_by_years(salaries_and_wins, teamID, start_year, end_year)
+
+            if column.lower() == 'wins':
+                data_to_plot.append(team_data_by_years['W'].tolist())
+            else:
+                data_to_plot.append([x/SALARY_FACTOR for x in team_data_by_years['salary'].tolist()])  # Format the Salaries axis in millions.
+
+
+        fig, ax1 = plt.subplots()
+        box = ax1.boxplot(data_to_plot, vert=False, labels=teamIDs, patch_artist=True)
+        ax1.set_title(title)
+
+        #  Cycle through the list of colors (or through the list of teamIDs) to make the boxplots more colorful.
+        colors = ['magenta', 'yellow', 'cyan', 'green']
+        colored_boxes = zip(box['boxes'], cycle(colors)) if len(box['boxes']) > len(colors) else zip(cycle(box['boxes']), colors)
+
+        fig.tight_layout()
+
         plt.show()
