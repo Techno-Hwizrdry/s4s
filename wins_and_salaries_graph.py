@@ -98,13 +98,10 @@ def graph_boxplots(salaries_and_wins, teamIDs, column, start_year=1871, end_year
     else:
         data_to_plot = []
         title  = ''
-        column = '' 
 
         if column.lower() == 'salaries':
-            column = 'salary'
             title  = 'Total Salaries (in millions of USD) between %d and %d' % (start_year, end_year)
         else:
-            column = 'W'
             title  = 'Wins between %d and %d' % (start_year, end_year)
 
         #  Get the total salaries (or wins) for each team in teamIDs ready for the box plots.
